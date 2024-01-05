@@ -401,7 +401,7 @@ open_all_revs_include_doc(Db, DocInfo) ->
     OpenResults = [couch_db:open_doc(Db, DI, OpenOpts) || DI <- DocInfos],
     Docs = [Doc || {ok, Doc} <- OpenResults],
     [Doc1 | RestDocs] = Docs,
-    RestRevs = [Doc#doc.revs || Doc <- RestDocs],
+    RestRevs = [Doc#doc.revs || Doc <- RestDocs, Doc#doc.deleted =:= false],
     Conflicts = [{conflicts, [{Pos, RevId} || {Pos, [RevId]} <- RestRevs]}],
     Doc2 = Doc1#doc{meta = Conflicts},
     {[Doc2], Docs}.
